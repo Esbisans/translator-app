@@ -14,7 +14,7 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #393359;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -35,4 +35,59 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.centered-container {
+  width: 800px; /* Puedes ajustar el ancho según tus necesidades */
+  height: 400px; 
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 10px; /* Esto crea los bordes redondeados */
+  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.2); /* Agrega una pequeña sombra */
+  background-color: #F05A80; /* Color de fondo del contenedor, puedes cambiarlo según tus preferencias */
+}
+
+.custom-search {
+  position: relative;
+  margin-bottom: 50px;
+}
+.custom-search-input {
+  width: 100%;
+  height: 50px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  padding: 10px 100px 10px 20px; 
+  line-height: 1;
+  box-sizing: border-box;
+  outline: none;
+  font-size: medium;
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
+}
+.custom-search-button {
+  position: absolute;
+  right: 3px; 
+  top: 3px;
+  bottom: 3px;
+  border: 0;
+  background: #d1095e;
+  color: #fff;
+  outline: none;
+  margin: 0;
+  padding: 0 10px;
+  border-radius: 20px;
+  z-index: 2;
+  font-size: medium;
+}
+
+.custom-search-button:hover {
+  background-color: #2980b9; /* Color que deseas al pasar el mouse por encima */
+}
+
+.custom-textarea {
+  width: 100%;
+  outline: none;
+  border-radius: 20px;
+  font-size: xx-large;
+  padding-top: 20px;
+  padding-bottom: 20px;  
 }
