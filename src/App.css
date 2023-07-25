@@ -39,8 +39,9 @@
 
 .centered-container {
   width: 800px; /* Puedes ajustar el ancho según tus necesidades */
-  height: 400px; 
+  height: auto; 
   margin: 0 auto;
+  margin-bottom: 30px;
   padding: 20px;
   border-radius: 10px; /* Esto crea los bordes redondeados */
   box-shadow: 0 10px 10px rgba(0, 0, 0, 0.2); /* Agrega una pequeña sombra */
@@ -90,4 +91,9 @@
   font-size: xx-large;
   padding-top: 20px;
   padding-bottom: 20px;  
+}
+
+.centrado {
+  padding-left:250px;
+
 }
