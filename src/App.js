@@ -22,8 +22,8 @@ function App() {
       "response":"Error sintactico"
     },
     "traduccion":{
-      "correct":false,
-      "response":"No disponible"
+      "correct":true,
+      "response":"Estoy en el parque con mis sobrinos"
     }
     }
 
@@ -40,12 +40,16 @@ function App() {
   //Variable para cambiar el backend
   const URI = process.env.REACT_APP_URI;
   //estado para la respuesta del backend
-  const [respuestaBackend, setRespuestaBackend] = useState(null); 
+  //const [respuestaBackend, setRespuestaBackend] = useState(null); 
 
   const [utterance, setUtterance] = useState(null);
 
   const handleInputChange = (event) => {
     setSentencia(event.target.value);
+  };
+
+  const handleTextAreaChange = (event) => {
+    setText(event.target.value);
   };
 
 
@@ -66,7 +70,7 @@ function App() {
     setSintaxis(data.sintaxis)
     setSemantica(data.semantica)
     setTraduccion(data.traduccion)
-
+    setText(data.traduccion.response)
     // if(data[3]!="No disponible"){
     //   setText(sentencia)
     // }
@@ -94,16 +98,30 @@ function App() {
     setSintaxis(objeto.sintaxis)
     setSemantica(objeto.semantica)
     setTraduccion(objeto.traduccion)
+    setText(objeto.traduccion.response)
   }
 
-  const handlePlay = () => {
+  const handlePlaySpanish = () => {
+
+    const synth = window.speechSynthesis;
+    const u = new SpeechSynthesisUtterance(text);
+
+    setUtterance(u);
+    synth.speak(u);
+    console.log(text)
+  }
+
+  const handlePlayEnglish = () => {
 
     const synth = window.speechSynthesis;
     const u = new SpeechSynthesisUtterance(sentencia);
 
+    // Configurar el idioma del audio a inglés
+    u.lang = 'en';
+
     setUtterance(u);
     synth.speak(u);
-    console.log(sentencia)
+
   }
 
   return (
@@ -136,7 +154,7 @@ function App() {
             <button className="btn btn-outline-light" 
               type="button" 
               id="button-addon1"
-              onClick={handlePlay}
+              onClick={handlePlayEnglish}
             >
               <i 
                 className="bi bi-volume-down-fill"
@@ -164,13 +182,30 @@ function App() {
             <textarea
               className="form-control" 
               id="floatingTextarea"
-              value={traduccion.response}
+              value={text}
+              onChange={handleTextAreaChange}
               placeholder="Traducción"
               style={{fontSize: "1.6rem", height: 100, paddingTop: 40}}
               readOnly
 
             />
             <label for="floatingTextarea">Traducción</label>
+            {
+              traduccion.correct ? (
+                <button
+                  className="btn btn-transparent position-absolute top-0 end-0"
+                  onClick={handlePlaySpanish}
+                >
+                  <i 
+                    className="bi bi-volume-down"
+                    style={{fontSize: 30 , color: 'purple' }}
+                  ></i>
+                </button>
+              ) : (
+                null
+              )
+            }
+
           </div>
           {/* <textarea 
             className='custom-textarea'
@@ -279,7 +314,7 @@ function App() {
               <div className="accordion-item">
                 <h2 className="accordion-header" id="headingThree">
                 {
-                  semantica .correct ? (  
+                  semantica.correct ? (  
                     <>
                       <button id='accordion-button-ok' className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
                         <div>
@@ -321,7 +356,7 @@ function App() {
           </div>
 
         ) : (
-          <h3></h3>
+          <hr />
         )
         }
       </header>
