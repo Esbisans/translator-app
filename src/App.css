@@ -14,7 +14,7 @@
 }
 
 .App-header {
-  background-color: #393359;
+  background-color: #00171f;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -37,15 +37,26 @@
   }
 }
 
+#accordion-button-ok {
+  background-color: #267E2D; /* Cambia el color de fondo del botón */
+  color: white; /* Cambia el color del texto del botón */
+}
+
+#accordion-button-nok {
+  background-color: #C10B0B; /* Cambia el color de fondo del botón */
+  color: white; /* Cambia el color del texto del botón */
+}
+
 .centered-container {
-  width: 800px; /* Puedes ajustar el ancho según tus necesidades */
+  width: 836px; /* Puedes ajustar el ancho según tus necesidades */
   height: auto; 
   margin: 0 auto;
   margin-bottom: 30px;
+  margin-top: 30px;
   padding: 20px;
   border-radius: 10px; /* Esto crea los bordes redondeados */
   box-shadow: 0 10px 10px rgba(0, 0, 0, 0.2); /* Agrega una pequeña sombra */
-  background-color: #F05A80; /* Color de fondo del contenedor, puedes cambiarlo según tus preferencias */
+  background-color: #1c2541; /* Color de fondo del contenedor, puedes cambiarlo según tus preferencias */
 }
 
 .custom-search {

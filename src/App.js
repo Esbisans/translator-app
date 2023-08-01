@@ -4,12 +4,35 @@ import axios from 'axios';
 
 function App() {
 
+  const objeto = {
+    "tokens":{
+      "correct": true,
+      "response": [
+      ["i","pronombre"],
+      ["run","verbo"],
+      ["the","determinante"]
+    ],
+    },
+    "sintaxis":{
+      "correct":true,
+      "response":"Sin errores sintacticos"
+    },
+    "semantica":{
+      "correct":false,
+      "response":"Error sintactico"
+    },
+    "traduccion":{
+      "correct":false,
+      "response":"No disponible"
+    }
+    }
+
   //estado para lo que hay dentro del input 
   const [sentencia, setSentencia] = useState('')
   //estado para actualizar el text area
   const [text, setText] = useState('')
   //estado para el objeto del backend
-  const [respuesta, setRespuesta] = useState('')
+  const [respuesta, setRespuesta] = useState(false)
   const [tokens, setTokens] = useState(false)
   const [sintaxis, setSintaxis] = useState(false)
   const [semantica, setSemantica] = useState(false)
@@ -18,6 +41,8 @@ function App() {
   const URI = process.env.REACT_APP_URI;
   //estado para la respuesta del backend
   const [respuestaBackend, setRespuestaBackend] = useState(null); 
+
+  const [utterance, setUtterance] = useState(null);
 
   const handleInputChange = (event) => {
     setSentencia(event.target.value);
@@ -35,11 +60,12 @@ function App() {
       })
     })
     const data = await res.json()
+
     setRespuesta(data)
-    setTokens(data[0])
-    setSintaxis(data[1])
-    setSemantica(data[2])
-    setTraduccion(data[3])
+    setTokens(data.tokens)
+    setSintaxis(data.sintaxis)
+    setSemantica(data.semantica)
+    setTraduccion(data.traduccion)
 
     // if(data[3]!="No disponible"){
     //   setText(sentencia)
@@ -62,6 +88,24 @@ function App() {
 
   }
 
+  const traducirTest = () => {
+    setRespuesta(objeto)
+    setTokens(objeto.tokens)
+    setSintaxis(objeto.sintaxis)
+    setSemantica(objeto.semantica)
+    setTraduccion(objeto.traduccion)
+  }
+
+  const handlePlay = () => {
+
+    const synth = window.speechSynthesis;
+    const u = new SpeechSynthesisUtterance(sentencia);
+
+    setUtterance(u);
+    synth.speak(u);
+    console.log(sentencia)
+  }
+
   return (
     <div className="App">
       <header className="App-header">
@@ -71,7 +115,7 @@ function App() {
           <h6>Affirmative → Sujeto + Verbo + Complemento </h6>
           <h6>Negative → Sujeto + Negacion + Verbo + Complemento</h6>
           <h6>Question → Verbo auxiliar + Sujeto + Verbo + Complemento</h6>
-          <div className="custom-search">
+          {/* <div className="custom-search">
             <input 
               type="text" 
               className="custom-search-input" 
@@ -79,82 +123,209 @@ function App() {
               value={sentencia}
               onChange={handleInputChange}
             />
+            
             <button 
               className="custom-search-button" 
               type="submit"
-              onClick={traducir}
+              onClick={traducirTest}
             > 
               Traducir
             </button>  
+          </div> */}
+          <div className="input-group input-group-lg my-5">
+            <button className="btn btn-outline-light" 
+              type="button" 
+              id="button-addon1"
+              onClick={handlePlay}
+            >
+              <i 
+                className="bi bi-volume-down-fill"
+              ></i>
+            </button>
+            <input 
+              type="text" 
+              className="form-control" 
+              placeholder="Escriba una oración" 
+              aria-label="Escriba una oración" 
+              aria-describedby="button-addon2"
+              value={sentencia}
+              onChange={handleInputChange}
+            />
+            <button 
+              className="btn btn-outline-primary" 
+              type="button" 
+              id="button-addon2"
+              onClick={traducirTest}
+            > 
+              Traducir
+            </button>
           </div>
-          <textarea 
+          <div className="form-floating mb-3">
+            <textarea
+              className="form-control" 
+              id="floatingTextarea"
+              value={traduccion.response}
+              placeholder="Traducción"
+              style={{fontSize: "1.6rem", height: 100, paddingTop: 40}}
+              readOnly
+
+            />
+            <label for="floatingTextarea">Traducción</label>
+          </div>
+          {/* <textarea 
             className='custom-textarea'
             rows={2}
             readOnly
-            value={traduccion}
-          />
-
-          {
-            tokens ? (
-              <div  className="centrado">
-                <hr />
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Tipo de palabra</th>
-                      <th>palabra</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {tokens.map((lista, index) => (
-                      <tr key={index}>
-                        <td>{lista[1]}</td>
-                        <td>{lista[0]}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div> 
-            ) : (
-              <h3></h3>
-            )
-
-
-          }
-
-          {
-
-            sintaxis ? (
-
-              <div>
-              <hr />
-              <h2>{sintaxis}</h2>
-              </div> 
-
-            ) : (
-              <h3></h3>
-            )
-
-          }
-
-          {
-
-          semantica ? (
-
-            <div>
-            <hr />
-            <h2>{semantica}</h2>
-            </div> 
-
-          ) : (
-            <h3></h3>
-          )
-
-          }
-
+            
+          /> */}
 
         </div>
+        
+        {
+        respuesta ? (
+
+          <div className='container col-8 mt-4 mb-4'>
+
+            <div className="accordion" id="accordionExample">
+              <div className="accordion-item">
+                <h2 className="accordion-header" id="headingOne">
+                    {
+                      tokens.correct ? (    
+                        <button id='accordion-button-ok' className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                          <div>
+                            <i 
+                              className="bi bi-check-circle" 
+                              style={{fontSize: 30 }}
+                            ></i>
+                            <span className="ms-2">Analizador léxico</span>
+                          </div>
+                        </button>
+                      ) : (
+                        <button id='accordion-button-nok' className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                          <div>
+                            <i 
+                              className="bi bi-x-circle" 
+                              style={{fontSize: 30 }}
+                            ></i>
+                            <span className="ms-2">Analizador léxico</span>
+                          </div>
+                        </button>
+                      )
+                    }
+                </h2>
+                <div id="collapseOne" className="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                  <div className="accordion-body">
+                    <table className="table table-hover">
+                      <thead>
+                        <tr>
+                          <th scope="col">Tipo</th>
+                          <th scope="col">Palabra</th>
+                        </tr>
+                      </thead>
+                        <tbody>
+                          {tokens.response.map((lista, index) => (
+                            <tr key={index}>
+                              <td>{lista[1]}</td>
+                              <td>{lista[0]}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div className="accordion-item">
+                <h2 className="accordion-header" id="headingTwo">
+                  {
+                    sintaxis.correct ? (    
+                      <>
+                        <button id='accordion-button-ok' className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                          <div>
+                            <i 
+                              className="bi bi-check-circle" 
+                              style={{fontSize: 30 }}
+                            ></i>
+                            <span className="ms-2">Analizador sintáctico</span>
+                          </div>
+                        </button>
+                        <div id="collapseTwo" className="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                          <div className="accordion-body">
+                            <span>{sintaxis.response}</span>
+                          </div>
+                        </div>
+                      </>
+                      
+                    ) : (
+                      <>
+                        <button id='accordion-button-nok' className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                          <div>
+                          <i 
+                              className="bi bi-x-circle" 
+                              style={{fontSize: 30 }}
+                            ></i>
+                            <span className="ms-2">Analizador sintáctico</span>
+                          </div>
+                        </button> 
+                        <div id="collapseTwo" className="accordion-collapse collapse show" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                          <div className="accordion-body">
+                            <span>{sintaxis.response}</span>
+                          </div>
+                        </div>
+                      </>
+                    )
+                  }
+                </h2>
+              </div>
+              <div className="accordion-item">
+                <h2 className="accordion-header" id="headingThree">
+                {
+                  semantica .correct ? (  
+                    <>
+                      <button id='accordion-button-ok' className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        <div>
+                          <i 
+                            className="bi bi-check-circle" 
+                            style={{fontSize: 30 }}
+                          ></i>
+                          <span className="ms-2">Analizador semántico</span>
+                        </div>
+                      </button>
+                      <div id="collapseThree" className="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                        <div className="accordion-body">
+                          <span>{semantica.response}</span>
+                        </div>
+                      </div>
+                    </>  
+                  ) : (
+                    <>
+                      <button id='accordion-button-nok' className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        <div>
+                          <i 
+                            className="bi bi-x-circle" 
+                            style={{fontSize: 30 }}
+                          ></i>
+                          <span className="ms-2">Analizador semántico</span>
+                        </div>
+                      </button>
+                      <div id="collapseThree" className="accordion-collapse collapse show" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                        <div className="accordion-body">
+                          <span>{semantica.response}</span>
+                        </div>
+                      </div>
+                    </>
+                  )
+                }
+                </h2>
+              </div>
+            </div>
+          </div>
+
+        ) : (
+          <h3></h3>
+        )
+        }
       </header>
+
     </div>
   );
 }
